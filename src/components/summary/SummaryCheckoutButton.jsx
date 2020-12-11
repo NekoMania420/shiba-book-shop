@@ -1,7 +1,15 @@
-const SummaryCheckoutButton = () => (
+const SummaryCheckoutButton = (props) => (
   <button
     type="button"
-    class={['block', 'w-full', 'p-4', 'text-2xl', 'bg-green-500', 'text-white']}
+    disabled={props.disabled}
+    class={[
+      'block',
+      'w-full',
+      'p-4',
+      'text-2xl',
+      props.disabled ? 'bg-gray-200' : 'bg-green-500',
+      'text-white',
+    ]}
   >
     Checkout
   </button>
