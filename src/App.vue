@@ -154,7 +154,9 @@ export default {
     )
 
     const discount = computed(() => {
-      const count = selectedItems.value.length
+      const count = selectedItems.value.filter((item) =>
+        /harry potter/.test(item.title.toLowerCase())
+      ).length
 
       const discountPercentage = (() => {
         if (count >= 7) return 0.15
