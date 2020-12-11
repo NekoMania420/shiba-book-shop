@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "deploy": "./deploy.sh"
   },
   "dependencies": {
     "vue": "^3.0.4"
