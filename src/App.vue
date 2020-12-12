@@ -37,10 +37,13 @@
         </SummaryList>
         <template #footer>
           <SummaryFinalList>
+            <SummaryFinalItem label="Total">
+              {{ toCurrency(total) }}
+            </SummaryFinalItem>
             <SummaryFinalItem label="Discount">
               {{ toCurrency(discount) }}
             </SummaryFinalItem>
-            <SummaryFinalItem label="Total">
+            <SummaryFinalItem label="Grand Total">
               <span :class="['font-bold', 'text-lg']">
                 {{ toCurrency(totalWithDiscount) }}
               </span>
@@ -154,11 +157,11 @@ export default {
     )
 
     const discount = computed(() => {
-      const count = selectedItems.value.filter((item) =>
+      const filteredItems = selectedItems.value.filter((item) =>
         /harry potter/.test(item.title.toLowerCase())
-      ).length
+      )
 
-      const discountPercentage = (() => {
+      const getPercentage = (count) => {
         if (count >= 7) return 0.15
         if (count >= 6) return 0.14
         if (count >= 5) return 0.13
@@ -167,9 +170,28 @@ export default {
         if (count >= 2) return 0.1
 
         return 0
-      })()
+      }
 
-      return total.value * discountPercentage
+      let remains = filteredItems.map((item) => ({
+        value: +item.price,
+        count: item.amount,
+      }))
+
+      let totalSum = 0
+
+      while (remains.length > 1) {
+        const minCount = Math.min(...remains.map((item) => item.count))
+
+        const sum = remains.reduce((prev, curr) => prev + curr.value, 0)
+
+        totalSum += minCount * sum * getPercentage(remains.length)
+
+        remains = remains
+          .map((item) => ({ ...item, count: item.count - minCount }))
+          .filter((item) => item.count > 0)
+      }
+
+      return totalSum
     })
 
     const totalWithDiscount = computed(() => total.value - discount.value)
